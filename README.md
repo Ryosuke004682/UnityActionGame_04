@@ -1,1 +1,2 @@
 # UnityActionGame_04
+InputManagerを使ったアクションゲームを作る。
