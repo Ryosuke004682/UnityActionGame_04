@@ -15,10 +15,10 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
+public partial class Controls: IInputActionCollection2, IDisposable
 {
     public InputActionAsset asset { get; }
-    public @PlayerInputAction()
+    public Controls()
     {
         asset = InputActionAsset.FromJson(@"{
     ""name"": ""PlayerInputAction"",
@@ -31,6 +31,15 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""a4520d4d-4408-4d86-85ae-750c81d5a4b6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dodge"",
+                    ""type"": ""Button"",
+                    ""id"": ""1d5af2de-eb61-4cd7-87a0-7f013056496e"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -57,6 +66,28 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""GamePad"",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eef25209-e697-437f-9b92-37192785a47e"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse & Keyboard"",
+                    ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""51584299-40ca-460a-a4c7-0838e4bc901c"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dodge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -160,8 +191,8 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Jump;
     public struct PlayerActions
     {
-        private @PlayerInputAction m_Wrapper;
-        public PlayerActions(@PlayerInputAction wrapper) { m_Wrapper = wrapper; }
+        private Controls m_Wrapper;
+        public PlayerActions(Controls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
@@ -175,6 +206,7 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
+          
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
