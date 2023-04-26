@@ -15,25 +15,29 @@ public class PlayerTestState : PlayerBaseState
 
     public override void Enter()
     {
-        stateMachine.InputRender.e_JumpEvent += OnJump;
+        
     }
 
     public override void Tick(float deltaTime)
     {
-        f_timer += deltaTime;
-        Debug.Log(f_timer);
+        Vector3 movement = new Vector3();
+
+        //ƒvƒŒƒCƒ„[‚ÌˆÚ“®ˆ—
+        movement.x = stateMachine.InputRender.v2_MovementValue.x;
+        movement.y = 0;
+        movement.z = stateMachine.InputRender.v2_MovementValue.y;
+
+        stateMachine.Controller.Move(movement * stateMachine.MovementSpeed * deltaTime);
+
+        if (stateMachine.InputRender.v2_MovementValue == Vector2.zero) { return; }
+
+        stateMachine.transform.rotation = Quaternion.LookRotation(new Vector3(-movement.z , movement.y , movement.x));
     }
 
     public override void Exit()
     {
-        stateMachine.InputRender.e_JumpEvent -= OnJump;
+        
     }
-
-    private void OnJump()
-    {
-        stateMachine.SwitchState(new PlayerTestState(stateMachine));
-    }
-
 
 
     /*

@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class PlayerStateMachine : StateMachine
 {
-    [field: SerializeField]Å@public InputReader InputRender { get; private set; }
+    [field: SerializeField] public InputReader InputRender 
+    { get; private set; }
+
+    [field: SerializeField] public CharacterController Controller
+    { get; private set; }
+
+    [field: SerializeField] public float MovementSpeed
+    { get; private set; }
+
 
     private void Start()
     {
