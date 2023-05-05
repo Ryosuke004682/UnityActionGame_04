@@ -18,6 +18,9 @@ public class InputReader : MonoBehaviour,PlayerInputAction.IPlayerActions
 
     private void Start()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
         playerInput = new PlayerInputAction();
         playerInput.Player.SetCallbacks(this);
 
@@ -50,6 +53,11 @@ public class InputReader : MonoBehaviour,PlayerInputAction.IPlayerActions
     public void OnMove (InputAction.CallbackContext context)
     {
         v2_MovementValue = context.ReadValue<Vector2>();
+    }
+
+    public void OnLook(InputAction.CallbackContext constext)
+    {
+
     }
 
 
