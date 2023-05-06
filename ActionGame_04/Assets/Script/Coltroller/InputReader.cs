@@ -8,10 +8,8 @@ public class InputReader : MonoBehaviour,PlayerInputAction.IPlayerActions
 {
     public       Vector2 v2_MovementValue { get; private set; }
 
-
     public event Action e_JumpEvent;
     public event Action e_OnDodge  ;
-
 
     private      PlayerInputAction playerInput;
 

@@ -17,6 +17,8 @@ public class PlayerStateMachine : StateMachine
     [field: SerializeField] public float MovementSpeed
     { get; private set; }
 
+    [field: SerializeField] public float RotationDampSpeed
+    { get; private set; }
 
 
     public Transform MainCameraTransform { get; private set; }
@@ -24,11 +26,9 @@ public class PlayerStateMachine : StateMachine
 
     private void Start()
     {
-        
-
         MainCameraTransform = Camera.main.transform;
 
-        SwitchState(new PlayerTestState(this));
+        SwitchState(new PlayerState(this));
     }
 
 
