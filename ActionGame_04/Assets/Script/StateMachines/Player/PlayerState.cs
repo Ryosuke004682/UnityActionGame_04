@@ -64,7 +64,7 @@ public class PlayerState : PlayerBaseState
     private Vector3 CalculateMovement()
     {
         var forward = stateMachine.MainCameraTransform.forward;
-        var right   = stateMachine.MainCameraTransform.right;
+        var right   = stateMachine.MainCameraTransform.right  ;
 
         forward.y = 0;
         right  .y = 0;
@@ -112,6 +112,5 @@ public class PlayerState : PlayerBaseState
     ƒCƒxƒ“ƒgŠÖ” EEon```()
 
     */
-
 
 }
