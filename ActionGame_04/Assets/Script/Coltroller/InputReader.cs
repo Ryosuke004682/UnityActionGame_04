@@ -8,11 +8,13 @@ public class InputReader : MonoBehaviour,PlayerInputAction.IPlayerActions
 {
     public       Vector2 v2_MovementValue { get; private set; }
 
-    public event Action e_JumpEvent;
-    public event Action e_OnDodge  ;
+    public event Action e_JumpEvent        ;
+    public event Action e_OnDodge          ;
+    public event Action e_TargetEvent      ;
+    public event Action e_CancelTargetEvent;
+
 
     private      PlayerInputAction playerInput;
-
 
     private void Start()
     {
@@ -45,6 +47,20 @@ public class InputReader : MonoBehaviour,PlayerInputAction.IPlayerActions
         if (context.performed) { return; }
 
         e_OnDodge?.Invoke();
+    }
+
+    //ロックオンするところ
+    public void OnTarget(InputAction.CallbackContext context)
+    {
+        if (!context.performed) { return; }
+        e_TargetEvent?.Invoke();
+    }
+
+    //ロックオン解除するところ
+    public void OnTargetCancel(InputAction.CallbackContext context)
+    {
+        if (!context.performed) { return; }
+        e_CancelTargetEvent?.Invoke();
     }
 
     //Playerが移動するところ

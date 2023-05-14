@@ -11,32 +11,37 @@ public class PlayerState : PlayerBaseState
     private float f_walkSpeed   =  2.0f;
     private float f_runSpeed    =  5.0f;
     private float f_fierceSpeed = 10.0f;
-
-    private float f_smoothTime = 0.1f;
+    private float f_smoothTime  =  0.1f;
 
     private float f_timer;
 
     //処理を軽くするために、Hash値に変換して定数化させとく
     private readonly int FREELOOKSPEED_HASH 
-                   = Animator.StringToHash( "FreeLookSpeed");
+                   = Animator.StringToHash("FreeLookSpeed");
+
+    private readonly int FREELOOK_BLENDTREE_HASH
+                   = Animator.StringToHash("FreeLookBlendTree");
 
 
 
     public PlayerState(PlayerStateMachine testMachine)
-                                       : base(testMachine)
-    { }
+                                   : base(testMachine){ }
 
 
     public override void Enter()
     {
-        
+        stateMachine.InputRender.e_TargetEvent += OnTarget ;
+
+        stateMachine.Animator.Play(FREELOOK_BLENDTREE_HASH);
     }
 
     public override void Tick(float deltaTime)
     {
         Vector3 movement = CalculateMovement();
+
+
+        Move(movement * stateMachine.MovementSpeed , deltaTime);
         
-        stateMachine.Controller.Move(movement * stateMachine.MovementSpeed * deltaTime);
 
         if (stateMachine.InputRender.v2_MovementValue == Vector2.zero)
         {
@@ -49,15 +54,26 @@ public class PlayerState : PlayerBaseState
         f_smoothTime         = Mathf.Lerp(f_smoothTime , 1.0f , 0.7f);
         var currentWalkSpeed = Mathf.Lerp(f_idleSpeed  , f_walkSpeed , f_smoothTime);
 
-        stateMachine.Animator.SetFloat(FREELOOKSPEED_HASH, currentWalkSpeed, 0.1f , deltaTime);
+        stateMachine.Animator.SetFloat(FREELOOKSPEED_HASH, f_runSpeed, 0.1f , deltaTime);
 
         FaceMovementDirection(movement , deltaTime);
     }
 
     public override void Exit()
     {
-        
+        stateMachine.InputRender.e_TargetEvent -= OnTarget;
     }
+
+    private void OnTarget()
+    {
+        if(!stateMachine.Target.SelectTarget())
+        {
+            return;
+        }
+
+        stateMachine.SwitchState(new PlayerTargetingState(stateMachine));
+    }
+
 
     //プレイヤーの移動処理
     //カメラの相対移動
@@ -81,9 +97,10 @@ public class PlayerState : PlayerBaseState
     {
         //滑らかな回転をさせたいのでQuaternion.Lerpを使う
 
-        stateMachine.transform.rotation = Quaternion.Lerp(stateMachine.transform.rotation  ,
-                                                          Quaternion.LookRotation(movement),
-                                                deltaTime * stateMachine.RotationDampSpeed);
+        stateMachine.transform.rotation = Quaternion.Lerp
+                            (stateMachine.transform.rotation,
+                            Quaternion.LookRotation(movement),
+                            deltaTime * stateMachine.RotationDampSpeed);
 
     }
 

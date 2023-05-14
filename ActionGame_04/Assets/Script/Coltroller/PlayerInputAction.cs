@@ -62,6 +62,24 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Target"",
+                    ""type"": ""Button"",
+                    ""id"": ""64cfee39-6c62-4499-8ccf-a729aa9586fc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TargetCancel"",
+                    ""type"": ""Button"",
+                    ""id"": ""9ff1ffad-ee3e-45ec-9abd-c74119a46620"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -196,6 +214,50 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2a1653ae-83e2-4928-9aca-b2de9104e97f"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse & Keyboard"",
+                    ""action"": ""Target"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b176c90f-7ead-4615-8793-ee48c93e06e6"",
+                    ""path"": ""<Gamepad>/rightStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamePad"",
+                    ""action"": ""Target"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b1ec81ec-2a01-45f6-b12f-8e5202f2807c"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse & Keyboard"",
+                    ""action"": ""TargetCancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5c96a912-8869-4512-81ee-65059251fccb"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamePad"",
+                    ""action"": ""TargetCancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -236,6 +298,8 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         m_Player_Dodge = m_Player.FindAction("Dodge", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
+        m_Player_Target = m_Player.FindAction("Target", throwIfNotFound: true);
+        m_Player_TargetCancel = m_Player.FindAction("TargetCancel", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -301,6 +365,8 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Dodge;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Look;
+    private readonly InputAction m_Player_Target;
+    private readonly InputAction m_Player_TargetCancel;
     public struct PlayerActions
     {
         private @PlayerInputAction m_Wrapper;
@@ -309,6 +375,8 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
         public InputAction @Dodge => m_Wrapper.m_Player_Dodge;
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Look => m_Wrapper.m_Player_Look;
+        public InputAction @Target => m_Wrapper.m_Player_Target;
+        public InputAction @TargetCancel => m_Wrapper.m_Player_TargetCancel;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -330,6 +398,12 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @Target.started += instance.OnTarget;
+            @Target.performed += instance.OnTarget;
+            @Target.canceled += instance.OnTarget;
+            @TargetCancel.started += instance.OnTargetCancel;
+            @TargetCancel.performed += instance.OnTargetCancel;
+            @TargetCancel.canceled += instance.OnTargetCancel;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -346,6 +420,12 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @Target.started -= instance.OnTarget;
+            @Target.performed -= instance.OnTarget;
+            @Target.canceled -= instance.OnTarget;
+            @TargetCancel.started -= instance.OnTargetCancel;
+            @TargetCancel.performed -= instance.OnTargetCancel;
+            @TargetCancel.canceled -= instance.OnTargetCancel;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -383,9 +463,11 @@ public partial class @PlayerInputAction: IInputActionCollection2, IDisposable
     }
     public interface IPlayerActions
     {
-        void OnJump(InputAction.CallbackContext context);
-        void OnDodge(InputAction.CallbackContext context);
-        void OnMove(InputAction.CallbackContext context);
-        void OnLook(InputAction.CallbackContext context);
+        void OnJump        (InputAction.CallbackContext context);
+        void OnDodge       (InputAction.CallbackContext context);
+        void OnMove        (InputAction.CallbackContext context);
+        void OnLook        (InputAction.CallbackContext context);
+        void OnTarget      (InputAction.CallbackContext context);
+        void OnTargetCancel(InputAction.CallbackContext context);
     }
 }
